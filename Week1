@@ -1,0 +1,54 @@
+#Introduction to Portfolio Construction and Analysis with Python EDHEC
+
+#Week 1 Quizz
+
+import pandas as pd 
+import numpy as np
+df = pd.read_csv("data/Portfolios_Formed_on_ME_monthly_EW.csv",
+                   header=0, index_col=0, parse_dates=True, na_values=-99.99)
+df.index.name = 'Date'
+df.index = pd.to_datetime(df.index, format='%Y%m')
+
+cols = ['Lo 20', 'Hi 20']
+returns = df[cols]
+returns = returns/100
+returns.head()
+
+# Calcul des rendements mensuels
+returns_monthly = returns
+
+# Calcul des rendements cumulés
+cumulative_returns = returns_monthly.cumsum()
+
+# Calcul du nombre d'années
+n_years = len(df.index) / 12
+
+# Calcul des rendements annualisés
+annualized_returns = (1 + cumulative_returns.iloc[-1]) ** (1 / n_years) - 1
+
+# Affichage des résultats
+print("\nRendements annualisés :")
+print(annualized_returns)
+
+annualized_vol = returns.std()*np.sqrt(12)
+annualized_vol
+# We can now compute the annualized returns as follows:
+
+n_months = len(df.index)
+n_years = n_months / 12
+
+return_per_month = np.mean(returns + 1, axis=0) - 1
+annualized_return = (1 + return_per_month) ** n_years - 1
+annualized_return  
+
+# Supposons que df["Lo 20"] contient vos données de rendement
+perf_cum = (df["Lo 20"].iloc[-1] / df["Lo 20"].iloc[0]) - 1
+
+# Calculer le nombre d'années (en supposant que les données sont mensuelles)
+nombre_annees = len(df.index) / 12
+
+# Calcul de la performance annualisée
+annualized_return = (1 + perf_cum) ** (1 / nombre_annees) - 1
+
+print("Performance cumulée:", round( perf_cum, 2), "%")
+print("Performance annualisée:", round(100 * annualized_return, 2), "%")
